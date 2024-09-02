@@ -96,10 +96,6 @@ modsController.flags.list = async function (req, res) {
 	console.log('KAREN GONZALEZ 2');
 
 	// Pagination doesn't count as a filter
-	// if (
-	// (Object.keys(filters).length === 1 && filters.hasOwnProperty('page')) ||
-	// (Object.keys(filters).length === 2 && filters.hasOwnProperty('page') && filters.hasOwnProperty('perPage'))
-	// ) {
 	if (paginationFilterCheck(filters)) {
 		hasFilter = false;
 	}
