@@ -32,16 +32,12 @@ function adminModCid(isAdminOrGlobalMod, moderatedCidsLength) {
 function filtersCidInitialize(filters, res) {
 	if (!filters.cid) {
 		// If mod and no cid filter, add filter for their modded categories
-		// filters.cid = res.locals.cids;
 		return res.locals.cids;
 	} else if (Array.isArray(filters.cid)) {
 		// Remove cids they do not moderate
-		// filters.cid = filters.cid.filter(cid => res.locals.cids.includes(String(cid)));
 		return filters.cid.filter(cid => res.locals.cids.includes(String(cid)));
 	} else if (!res.locals.cids.includes(String(filters.cid))) {
-		// filters.cid = res.locals.cids;
 		return res.locals.cids;
-		// hasFilter = false;
 	}
 }
 
@@ -62,12 +58,10 @@ modsController.flags.list = async function (req, res) {
 	const helpNotAllowValue = helpersNotAllowed(isAdminOrGlobalMod, moderatedCids.length);
 	const AdminModeratedCidVal = adminModCid(isAdminOrGlobalMod, moderatedCids.length);
 	if (helpNotAllowValue) {
+		console.log('KAREN GONZALEZ 1');
 		return helpers.notAllowed(req, res);
 	}
 
-	// if (!isAdminOrGlobalMod && moderatedCids.length) {
-	// res.locals.cids = moderatedCids.map(cid => String(cid));
-	// }
 	if (AdminModeratedCidVal) {
 		res.locals.cids = moderatedCids.map(cid => String(cid));
 	}
@@ -93,6 +87,8 @@ modsController.flags.list = async function (req, res) {
 			hasFilter = false;
 		}
 	}
+
+	console.log('KAREN GONZALEZ 2');
 
 	// Pagination doesn't count as a filter
 	if (
