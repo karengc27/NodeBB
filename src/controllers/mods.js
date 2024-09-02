@@ -41,6 +41,11 @@ function filtersCidInitialize(filters, res) {
 	}
 }
 
+function paginationFilterCheck(filters) {
+	return (Object.keys(filters).length === 1 && filters.hasOwnProperty('page')) ||
+	(Object.keys(filters).length === 2 && filters.hasOwnProperty('page') && filters.hasOwnProperty('perPage'));
+}
+
 
 modsController.flags.list = async function (req, res) {
 	const validFilters = ['assignee', 'state', 'reporterId', 'type', 'targetUid', 'cid', 'quick', 'page', 'perPage'];
@@ -91,10 +96,11 @@ modsController.flags.list = async function (req, res) {
 	console.log('KAREN GONZALEZ 2');
 
 	// Pagination doesn't count as a filter
-	if (
-		(Object.keys(filters).length === 1 && filters.hasOwnProperty('page')) ||
-		(Object.keys(filters).length === 2 && filters.hasOwnProperty('page') && filters.hasOwnProperty('perPage'))
-	) {
+	// if (
+	// (Object.keys(filters).length === 1 && filters.hasOwnProperty('page')) ||
+	// (Object.keys(filters).length === 2 && filters.hasOwnProperty('page') && filters.hasOwnProperty('perPage'))
+	// ) {
+	if (paginationFilterCheck(filters)) {
 		hasFilter = false;
 	}
 
