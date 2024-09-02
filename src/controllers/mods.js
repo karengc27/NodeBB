@@ -18,6 +18,34 @@ const helpers = require('./helpers');
 const modsController = module.exports;
 modsController.flags = {};
 
+// AQUI
+
+function helpersNotAllowed(isAdminOrGlobalMod, moderatedCidsLength) {
+	console.log(!(isAdminOrGlobalMod || !!moderatedCidsLength));
+	return (!(isAdminOrGlobalMod || !!moderatedCidsLength));
+}
+
+function adminModCid(isAdminOrGlobalMod, moderatedCidsLength) {
+	return (!isAdminOrGlobalMod && moderatedCidsLength);
+}
+
+function filtersCidInitialize(filters, res) {
+	if (!filters.cid) {
+		// If mod and no cid filter, add filter for their modded categories
+		// filters.cid = res.locals.cids;
+		return res.locals.cids;
+	} else if (Array.isArray(filters.cid)) {
+		// Remove cids they do not moderate
+		// filters.cid = filters.cid.filter(cid => res.locals.cids.includes(String(cid)));
+		return filters.cid.filter(cid => res.locals.cids.includes(String(cid)));
+	} else if (!res.locals.cids.includes(String(filters.cid))) {
+		// filters.cid = res.locals.cids;
+		return res.locals.cids;
+		// hasFilter = false;
+	}
+}
+
+
 modsController.flags.list = async function (req, res) {
 	const validFilters = ['assignee', 'state', 'reporterId', 'type', 'targetUid', 'cid', 'quick', 'page', 'perPage'];
 	const validSorts = ['newest', 'oldest', 'reports', 'upvotes', 'downvotes', 'replies'];
@@ -31,11 +59,16 @@ modsController.flags.list = async function (req, res) {
 	const [isAdminOrGlobalMod, moderatedCids,, { sorts }] = results;
 	let [,, { filters }] = results;
 
-	if (!(isAdminOrGlobalMod || !!moderatedCids.length)) {
+	const helpNotAllowValue = helpersNotAllowed(isAdminOrGlobalMod, moderatedCids.length);
+	const AdminModeratedCidVal = adminModCid(isAdminOrGlobalMod, moderatedCids.length);
+	if (helpNotAllowValue) {
 		return helpers.notAllowed(req, res);
 	}
 
-	if (!isAdminOrGlobalMod && moderatedCids.length) {
+	// if (!isAdminOrGlobalMod && moderatedCids.length) {
+	// res.locals.cids = moderatedCids.map(cid => String(cid));
+	// }
+	if (AdminModeratedCidVal) {
 		res.locals.cids = moderatedCids.map(cid => String(cid));
 	}
 
@@ -55,14 +88,8 @@ modsController.flags.list = async function (req, res) {
 	let hasFilter = !!Object.keys(filters).length;
 
 	if (res.locals.cids) {
-		if (!filters.cid) {
-			// If mod and no cid filter, add filter for their modded categories
-			filters.cid = res.locals.cids;
-		} else if (Array.isArray(filters.cid)) {
-			// Remove cids they do not moderate
-			filters.cid = filters.cid.filter(cid => res.locals.cids.includes(String(cid)));
-		} else if (!res.locals.cids.includes(String(filters.cid))) {
-			filters.cid = res.locals.cids;
+		filters.cid = filtersCidInitialize(filters, res);
+		if (!res.locals.cids.includes(String(filters.cid))) {
 			hasFilter = false;
 		}
 	}
@@ -154,7 +181,6 @@ modsController.flags.detail = async function (req, res, next) {
 			}
 		}
 	}
-
 
 	async function getAssignees(flagData) {
 		let uids = [];
