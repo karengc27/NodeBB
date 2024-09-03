@@ -13,6 +13,10 @@ const groups = require('../src/groups');
 const helpers = require('./helpers');
 const meta = require('../src/meta');
 
+// added
+// const { filtersCidInitialize } = require('../src/controllers/mods');
+// /Users/karengonzalez/Downloads/17-313/NodeBB/src/controllers/mods.js
+
 describe('Admin Controllers', () => {
 	let tid;
 	let cid;

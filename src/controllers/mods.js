@@ -41,6 +41,8 @@ function filtersCidInitialize(filters, res) {
 	}
 }
 
+// module.exports = { filtersCidInitialize };
+
 function paginationFilterCheck(filters) {
 	return (Object.keys(filters).length === 1 && filters.hasOwnProperty('page')) ||
 	(Object.keys(filters).length === 2 && filters.hasOwnProperty('page') && filters.hasOwnProperty('perPage'));
