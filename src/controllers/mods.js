@@ -20,11 +20,6 @@ modsController.flags = {};
 
 // AQUI
 
-function helpersNotAllowed(isAdminOrGlobalMod, moderatedCidsLength) {
-	console.log(!(isAdminOrGlobalMod || !!moderatedCidsLength));
-	return (!(isAdminOrGlobalMod || !!moderatedCidsLength));
-}
-
 function adminModCid(isAdminOrGlobalMod, moderatedCidsLength) {
 	return (!isAdminOrGlobalMod && moderatedCidsLength);
 }
@@ -62,9 +57,10 @@ modsController.flags.list = async function (req, res) {
 	const [isAdminOrGlobalMod, moderatedCids,, { sorts }] = results;
 	let [,, { filters }] = results;
 
-	const helpNotAllowValue = helpersNotAllowed(isAdminOrGlobalMod, moderatedCids.length);
+	// const helpNotAllowValue = helpersNotAllowed(isAdminOrGlobalMod, moderatedCids.length);
 	const AdminModeratedCidVal = adminModCid(isAdminOrGlobalMod, moderatedCids.length);
-	if (helpNotAllowValue) {
+	// if (helpNotAllowValue) {
+	if ((!(isAdminOrGlobalMod || !!moderatedCids.length))) {
 		console.log('KAREN GONZALEZ 1');
 		return helpers.notAllowed(req, res);
 	}
